@@ -14,7 +14,7 @@ public class UsernameLoginPanel extends JPanel {
         this.main = main;
         setLayout(new BorderLayout());
 
-        // Create the username field
+        // simple sign in ui
         usernameField = new JTextField(20);
         usernameField.setFont(new Font("Arial", Font.PLAIN, 12));
         JPanel usernamePanel = new JPanel();
@@ -23,7 +23,7 @@ public class UsernameLoginPanel extends JPanel {
         usernamePanel.add(usernameField);
         add(usernamePanel, BorderLayout.CENTER);
 
-        // Create the login button
+        // logs user in
         loginButton = new JButton("Login");
         loginButton.addActionListener(new ActionListener() {
             @Override

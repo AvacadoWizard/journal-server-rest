@@ -16,17 +16,18 @@ public class Main extends JFrame {
     private CreateEntryPanel createEntryPanel;
 
     public Main() {
-        // Set up the main frame
+        // create window
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Journal Server");
 
-        // Create the username login panel
+        // make default login panel so users can set their username
         usernameLoginPanel = new UsernameLoginPanel(this);
         add(usernameLoginPanel);
         setVisible(true);
     }
 
+    // set username for entire thing
     public void setUsername(String username) {
         this.username = username;
     }
@@ -36,16 +37,16 @@ public class Main extends JFrame {
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
-        // Create the button panel
+        // creates the panel for buttons
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
 
-        // Create the buttons
+        // buttons in general
         JButton journalEntriesButton = new JButton("Journal Entries");
         JButton myEntriesButton = new JButton("My Entries");
         JButton createEntryButton = new JButton("Create Entry");
 
-        // Add action listeners to the buttons
+        // make buttons functional :skull:
         journalEntriesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -67,17 +68,17 @@ public class Main extends JFrame {
             }
         });
 
-        // Add the buttons to the button panel
+        // adds the button to the button panel
         buttonPanel.add(journalEntriesButton);
         buttonPanel.add(myEntriesButton);
         buttonPanel.add(createEntryButton);
 
-        // Create the panels
+        // creates entry panels
         myEntriesPanel = new MyEntriesPanel(this, username);
         entriesPanel = new EntriesPanel(this);
         createEntryPanel = new CreateEntryPanel(this, username);
 
-        // Add the panels to the main panel
+        // add default panels
         mainPanel.add(myEntriesPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
@@ -86,11 +87,14 @@ public class Main extends JFrame {
         revalidate();
         repaint();
     }
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+    // a bunch of methods to deal with changing between panels
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
 
     public void switchToMyEntriesPanel() {
         mainPanel.remove(entriesPanel);
         mainPanel.remove(createEntryPanel);
-        myEntriesPanel.refreshEntries(); // Refresh the entries panel
+        myEntriesPanel.refreshEntries();
         mainPanel.add(myEntriesPanel, BorderLayout.CENTER);
         mainPanel.revalidate();
         mainPanel.repaint();

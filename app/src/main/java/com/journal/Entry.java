@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class Entry {
+public class Entry { // class for each entry to store data
     private String title;
     private LocalDate datePublished;
     private String entryText;

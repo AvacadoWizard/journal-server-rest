@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// simple pannel! is shown if there is an error with connections.
 public class ConnectionErrorPanel extends JPanel {
     private Main main;
 
@@ -13,7 +14,7 @@ public class ConnectionErrorPanel extends JPanel {
         setLayout(new BorderLayout());
         add(new JLabel("Error: Unable to connect to the remote database."), BorderLayout.CENTER);
 
-        // Create the refresh button
+        //  refresh button which switches to main panel
         JButton refreshButton = new JButton("Refresh");
         refreshButton.addActionListener(new ActionListener() {
             @Override

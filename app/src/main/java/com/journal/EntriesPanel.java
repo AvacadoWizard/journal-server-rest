@@ -2,32 +2,29 @@ package com.journal;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 public class EntriesPanel extends JPanel {
-    private Main main;
+    private Main main; // necessary to switch in
 
     public EntriesPanel(Main main) {
         this.main = main;
         setLayout(new BorderLayout());
 
-        // Create the entries panel
+        // creates panel for entries
         JPanel entriesPanel = new JPanel();
-        entriesPanel.setLayout(new BoxLayout(entriesPanel, BoxLayout.Y_AXIS)); // Vertical orientation
+        entriesPanel.setLayout(new BoxLayout(entriesPanel, BoxLayout.Y_AXIS));
 
-        // Add the entries panel to the main panel
+        // makes entries panel visible
         add(new JScrollPane(entriesPanel), BorderLayout.CENTER);
 
         refreshEntries(entriesPanel);
@@ -35,7 +32,7 @@ public class EntriesPanel extends JPanel {
 
     public void refreshEntries(JPanel entriesPanel) {
         entriesPanel.removeAll();
-        entriesPanel.setLayout(new BoxLayout(entriesPanel, BoxLayout.Y_AXIS)); // Vertical orientation
+        entriesPanel.setLayout(new BoxLayout(entriesPanel, BoxLayout.Y_AXIS));
     
         try {
             HttpClient client = HttpClient.newHttpClient();
@@ -83,7 +80,7 @@ public class EntriesPanel extends JPanel {
                     entryPanel.add(scrollPane);
                     entryPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     
-                    entriesPanel.add(entryPanel); // Add to the entries panel
+                    entriesPanel.add(entryPanel);
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to retrieve entries");
@@ -96,19 +93,20 @@ public class EntriesPanel extends JPanel {
         entriesPanel.repaint();
     }
 
+    // necessary to parse string response into json!
     private List<Map<String, String>> parseJson(String jsonString) {
         List<Map<String, String>> dictionaries = new ArrayList<>();
-        jsonString = jsonString.substring(1, jsonString.length() - 1); // Remove the outer brackets
-        String[] entries = jsonString.split("\\}\\s*,\\s*\\{"); // Split the string into individual entries
+        jsonString = jsonString.substring(1, jsonString.length() - 1);
+        String[] entries = jsonString.split("\\}\\s*,\\s*\\{");
         for (String entry : entries) {
             Map<String, String> dict = new HashMap<>();
-            entry = entry.replaceAll("\\{", "").replaceAll("\\}", ""); // Remove the curly brackets
-            String[] fields = entry.split(","); // Split the entry into individual fields
+            entry = entry.replaceAll("\\{", "").replaceAll("\\}", "");
+            String[] fields = entry.split(",");
             for (String field : fields) {
                 int colonIndex = field.indexOf(":");
                 if (colonIndex != -1) {
-                    String key = field.substring(0, colonIndex).trim().replaceAll("\"", ""); // Remove the quotes from the key
-                    String value = field.substring(colonIndex + 1).trim().replaceAll("\"", ""); // Remove the quotes from the value
+                    String key = field.substring(0, colonIndex).trim().replaceAll("\"", "");
+                    String value = field.substring(colonIndex + 1).trim().replaceAll("\"", "");
                     dict.put(key, value);
                 }
             }

@@ -9,9 +9,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
+
+// this is a panel that user's can edit the text of their panel... and only that
 public class EditEntryPanel extends JPanel {
     private Main main;
     private String username;
@@ -24,12 +24,12 @@ public class EditEntryPanel extends JPanel {
         this.title = title;
         setLayout(new BorderLayout());
 
-        // Create the title field
+        // this is for title fields
         JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
         add(titleLabel, BorderLayout.NORTH);
 
-        // Create the entry field
+        // entry field for editing post!!!
         entryTextArea = new JTextArea(entryText);
         entryTextArea.setFont(new Font("Arial", Font.PLAIN, 12));
         entryTextArea.setLineWrap(true);
@@ -58,6 +58,7 @@ public class EditEntryPanel extends JPanel {
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    // this acutally saves to the database
     private void saveEntry() {
         String entryText = entryTextArea.getText();
         System.out.println("Entry text: " + entryText);

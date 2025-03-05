@@ -10,7 +10,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,30 +25,31 @@ public class MyEntriesPanel extends JPanel {
         this.username = username;
         setLayout(new BorderLayout());
 
-        // Create the header panel
+        //  creates header to describe panel
         headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        headerPanel.setBackground(Color.decode("#F7F7F7")); // Light gray background
-        headerPanel.setBorder(BorderFactory.createLineBorder(Color.decode("#CCCCCC"))); // Light gray border
+        headerPanel.setBackground(Color.decode("#F7F7F7"));
+        headerPanel.setBorder(BorderFactory.createLineBorder(Color.decode("#CCCCCC")));
 
         JLabel headerLabel = new JLabel("Your Entries");
         headerLabel.setFont(new Font("Arial", Font.BOLD, 24));
         headerPanel.add(headerLabel);
 
-        // Create the entries panel
+        // initialize the main entry panel panel
         entriesPanel = new JPanel();
-        entriesPanel.setLayout(new BoxLayout(entriesPanel, BoxLayout.Y_AXIS)); // Vertical orientation
+        entriesPanel.setLayout(new BoxLayout(entriesPanel, BoxLayout.Y_AXIS));
 
-        // Add the header and entries panels to the main panel
+        // add a header to describe page
         add(headerPanel, BorderLayout.NORTH);
         add(new JScrollPane(entriesPanel), BorderLayout.CENTER);
 
         refreshEntries();
     }
 
+    // function to add all of user's entries
     public void refreshEntries() {
         entriesPanel.removeAll();
-        entriesPanel.setLayout(new BoxLayout(entriesPanel, BoxLayout.Y_AXIS)); // Vertical orientation
+        entriesPanel.setLayout(new BoxLayout(entriesPanel, BoxLayout.Y_AXIS));
 
         try {
             HttpClient client = HttpClient.newHttpClient();
@@ -60,7 +60,9 @@ public class MyEntriesPanel extends JPanel {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 200) {
                 String responseBody = response.body();
+                System.out.println(responseBody);
                 List<Map<String, String>> dictionaries = parseJson(responseBody);
+                System.out.println(dictionaries);
                 for (Map<String, String> dict : dictionaries) {
                     String title = dict.get("title");
                     String datePublished = dict.get("date_published");
@@ -107,7 +109,7 @@ public class MyEntriesPanel extends JPanel {
                     });
                     entryPanel.add(editButton);
 
-                    entriesPanel.add(entryPanel); // Add to the entries panel
+                    entriesPanel.add(entryPanel);
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to retrieve entries");
@@ -120,22 +122,23 @@ public class MyEntriesPanel extends JPanel {
         entriesPanel.repaint();
     }
 
+    // parse's the string received from server to json
     private List<Map<String, String>> parseJson(String jsonString) {
         List<Map<String, String>> dictionaries = new ArrayList<>();
         if (jsonString.equals("[]")) {
-            return dictionaries; // Return an empty list if the input string is an empty list
+            return dictionaries; // in cease list is empty, return empty so it doesnt bug out entry panels
         }
-        jsonString = jsonString.substring(1, jsonString.length() - 1); // Remove the outer brackets
-        String[] entries = jsonString.split("\\}\\s*,\\s*\\{"); // Split the string into individual entries
+        jsonString = jsonString.substring(1, jsonString.length() - 1); // reomves the outerbrackets
+        String[] entries = jsonString.split("\\}\\s*,\\s*\\{"); // splits each thing into an individual entry
         for (String entry : entries) {
             Map<String, String> dict = new HashMap<>();
-            entry = entry.replaceAll("\\{", "").replaceAll("\\}", ""); // Remove the curly brackets
-            String[] fields = entry.split(","); // Split the entry into individual fields
+            entry = entry.replaceAll("\\{", "").replaceAll("\\}", ""); // remove the curly brackets
+            String[] fields = entry.split(","); // split each entry into an individual thing, key and item
             for (String field : fields) {
                 int colonIndex = field.indexOf(":");
                 if (colonIndex != -1) {
-                    String key = field.substring(0, colonIndex).trim().replaceAll("\"", ""); // Remove the quotes from the key
-                    String value = field.substring(colonIndex + 1).trim().replaceAll("\"", ""); // Remove the quotes from the value
+                    String key = field.substring(0, colonIndex).trim().replaceAll("\"", ""); // remove quotes so it's visible
+                    String value = field.substring(colonIndex + 1).trim().replaceAll("\"", ""); // once again remove quotes
                     dict.put(key, value);
                 }
             }

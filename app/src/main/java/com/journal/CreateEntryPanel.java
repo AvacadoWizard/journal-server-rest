@@ -26,7 +26,7 @@ public class CreateEntryPanel extends JPanel {
         this.username = username;
         setLayout(new BorderLayout());
 
-        // Create the title field
+        // prompt user to enter title
         titleField = new JTextField(20);
         titleField.setFont(new Font("Arial", Font.PLAIN, 12));
         JPanel titlePanel = new JPanel();
@@ -35,18 +35,18 @@ public class CreateEntryPanel extends JPanel {
         titlePanel.add(titleField);
         add(titlePanel, BorderLayout.NORTH);
 
-        // Create the entry field
+        // allow user's to input their title
         entryField = new JTextArea(10, 40);
         entryField.setLineWrap(true);
         entryField.setWrapStyleWord(true);
         add(new JScrollPane(entryField), BorderLayout.CENTER);
 
-        // Create the public checkbox
+        // create the public checkbox
         publicCheckBox = new JCheckBox("Make this post public");
-        publicCheckBox.setSelected(true); // Default to public
+        publicCheckBox.setSelected(false); // default to private!
         add(publicCheckBox, BorderLayout.EAST);
 
-        // Create the save and cancel buttons
+        // create buttons to save or cancel the editing process
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
         saveButton = new JButton("Save");
