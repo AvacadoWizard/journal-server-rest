@@ -1,15 +1,17 @@
-const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const app = express();
-const port = 3000;
+const express = require('express'); // importing the express library
+const sqlite3 = require('sqlite3').verbose(); // sqlite import
+const app = express(); // initialize express 
+const port = 3000; // port 3000 is what i used for connections
 
+// express is the library that I used allowing me to connect to the database
 app.use(express.json());
 
+// connects to the sql database with all the posts
 const db = new sqlite3.Database('./journal.db', (err) => {
   if (err) {
     console.error(err.message);
   }
-  console.log('Connected to the database.');
+  console.log('database connection established.');
 });
 
 db.run(`
@@ -23,6 +25,7 @@ db.run(`
     );
 `);
 
+// responds with all of the entries which are public
 app.get('/entries', (req, res) => {
     db.all(`SELECT * FROM entries WHERE is_public = 1`, (err, rows) => {
         if (err) {
@@ -34,6 +37,7 @@ app.get('/entries', (req, res) => {
     });
 });
 
+// responds with all of the entries that the user has created
 app.get('/entries/:username', (req, res) => {
     const username = req.params.username;
     db.all(`SELECT * FROM entries WHERE username = ?`, [username], (err, rows) => {
@@ -46,6 +50,7 @@ app.get('/entries/:username', (req, res) => {
     });
 });
 
+// 
 app.get('/entries/:username/:title', (req, res) => {
     const username = req.params.username;
     const title = req.params.title.replace(/%20/g, ' ');
@@ -63,6 +68,7 @@ app.get('/entries/:username/:title', (req, res) => {
     });
 });
   
+// creates an entry with all the params from the gui
 app.post('/entries', (req, res) => {
 const { title, datePublished, entryText, username, isPublic } = req.body;
 db.run(`
@@ -78,6 +84,7 @@ db.run(`
 });
 });
 
+// update the entries with new body text, title is not editable
 app.put('/entries/:username/:title', (req, res) => {
     const username = req.params.username;
     const title = req.params.title.replace(/%20/g, ' ');
