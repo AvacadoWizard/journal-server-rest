@@ -7,11 +7,10 @@ import java.awt.event.ActionListener;
 
 public class Main extends JFrame {
 
+    private UsernameLoginPanel usernameLoginPanel;
     private JPanel mainPanel;
-    private JPanel buttonPanel;
-    private JButton journalEntriesButton;
-    private JButton myEntriesButton;
-    private JButton createEntryButton;
+    private String username;
+    private ConnectionErrorPanel connectionErrorPanel;
     private MyEntriesPanel myEntriesPanel;
     private EntriesPanel entriesPanel;
     private CreateEntryPanel createEntryPanel;
@@ -22,18 +21,29 @@ public class Main extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Journal Server");
 
-        // Create the main panel
+        // Create the username login panel
+        usernameLoginPanel = new UsernameLoginPanel(this);
+        add(usernameLoginPanel);
+        setVisible(true);
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void switchToMainPanel() {
+        remove(usernameLoginPanel);
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
         // Create the button panel
-        buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout());
 
         // Create the buttons
-        journalEntriesButton = new JButton("Journal Entries");
-        myEntriesButton = new JButton("My Entries");
-        createEntryButton = new JButton("Create Entry");
+        JButton journalEntriesButton = new JButton("Journal Entries");
+        JButton myEntriesButton = new JButton("My Entries");
+        JButton createEntryButton = new JButton("Create Entry");
 
         // Add action listeners to the buttons
         journalEntriesButton.addActionListener(new ActionListener() {
@@ -63,10 +73,9 @@ public class Main extends JFrame {
         buttonPanel.add(createEntryButton);
 
         // Create the panels
-        myEntriesPanel = new MyEntriesPanel();
-        entriesPanel = new EntriesPanel();
-        createEntryPanel = new CreateEntryPanel(this);
-        myEntriesPanel.refreshEntries();
+        myEntriesPanel = new MyEntriesPanel(this, username);
+        entriesPanel = new EntriesPanel(this);
+        createEntryPanel = new CreateEntryPanel(this, username);
 
         // Add the panels to the main panel
         mainPanel.add(myEntriesPanel, BorderLayout.CENTER);
@@ -74,17 +83,8 @@ public class Main extends JFrame {
 
         // Add the main panel to the frame
         add(mainPanel);
-
-        // Make the frame visible
-        setVisible(true);
-    }
-
-    private void switchToEntriesPanel() {
-        mainPanel.remove(myEntriesPanel);
-        mainPanel.remove(createEntryPanel);
-        mainPanel.add(entriesPanel, BorderLayout.CENTER);
-        mainPanel.revalidate();
-        mainPanel.repaint();
+        revalidate();
+        repaint();
     }
 
     public void switchToMyEntriesPanel() {
@@ -96,7 +96,34 @@ public class Main extends JFrame {
         mainPanel.repaint();
     }
 
-    private void switchToCreateEntryPanel() {
+    public void switchFromEdit(EditEntryPanel editEntryPanel) {
+        mainPanel.remove(entriesPanel);
+        mainPanel.remove(createEntryPanel);
+        mainPanel.remove(editEntryPanel);
+        myEntriesPanel.refreshEntries();
+        mainPanel.add(myEntriesPanel, BorderLayout.CENTER);
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
+
+    public void switchToEntriesPanel() {
+        mainPanel.remove(myEntriesPanel);
+        mainPanel.remove(createEntryPanel);
+        entriesPanel.refreshEntries(entriesPanel);
+        mainPanel.add(entriesPanel, BorderLayout.CENTER);
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
+
+    public void switchToEditEntryPanel(EditEntryPanel editEntryPanel) {
+        mainPanel.remove(myEntriesPanel);
+        mainPanel.remove(entriesPanel);
+        mainPanel.add(editEntryPanel, BorderLayout.CENTER);
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
+    
+    public void switchToCreateEntryPanel() {
         mainPanel.remove(myEntriesPanel);
         mainPanel.remove(entriesPanel);
         mainPanel.add(createEntryPanel, BorderLayout.CENTER);
@@ -104,6 +131,13 @@ public class Main extends JFrame {
         mainPanel.repaint();
     }
 
+    public void switchToConnectionErrorPanel() {
+        remove(mainPanel);
+        connectionErrorPanel = new ConnectionErrorPanel(this);
+        add(connectionErrorPanel);
+        revalidate();
+        repaint();
+    }
     public static void main(String[] args) {
         new Main();
     }
